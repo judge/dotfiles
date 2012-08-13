@@ -29,6 +29,7 @@ set backupdir=~/.vim/backup
 " ============ UI ============
 if filereadable(expand("~/.vim/bundle/vim-colors-solarized/colors/solarized.vim"))
 	color solarized
+    set background=dark
 endif
 let g:solarized_termtrans=0
 let g:solarized_termcolors=256
