@@ -1,0 +1,11 @@
+#! /bin/bash
+
+if [[ $platform == 'linux' ]]; then
+   alias ls='ls --color=auto'
+elif [[ $platform == 'darwin' ]]; then
+   alias ls='ls -G'
+fi
+
+alias ..='cd ..'
+alias l='ls -lAFh'
+alias v='mvim --remote-tab'

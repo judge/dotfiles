@@ -1,0 +1,26 @@
+#!/bin/bash
+
+set -o vi # Vi Bash command mode
+set -o notify # Notify immediatly on bg job completion
+
+shopt -s nocaseglob # Case insensitive autocompletion
+shopt -s histappend # Append to bash history, rather than overwriting it
+shopt -s cdspell # Autocorrect typos
+export EDITOR=/usr/bin/vim
+
+# export PAGER=vimpager # Setting pager to the vimpager in bin
+# alias less=$PAGER # Many scripts explicitly use less, workaround
+
+export TERM=screen-256color
+
+export LC_ALL="en_US.UTF-8"
+export LANG="en_US"
+
+export GREP_OPTIONS='--color=auto'
+export GREP_COLOR='1;33'
+
+export LSCOLORS='Gxfxcxdxdxegedabagacad'
+
+[[ -s $HOME/.rvm/scripts/rvm ]] && source $HOME/.rvm/scripts/rvm
+
+source "`brew --prefix`/etc/grc.bashrc" # GRC

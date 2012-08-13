@@ -1,0 +1,17 @@
+#!/bin/bash
+
+# Homebrew, high priority
+if [ -d /usr/local/Cellar ]; then
+  export PATH=/usr/local/bin:$PATH
+fi
+
+# Local bin, low priority
+if [ -d ~/.bin ]; then
+  export PATH=$PATH:~/.bin
+fi
+
+# RVM
+if [ -d ~/.gem/ruby/1.8/bin ]; then
+  export PATH=$PATH:~/.gem/ruby/1.8/bin
+fi
+
