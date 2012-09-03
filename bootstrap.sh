@@ -1,7 +1,7 @@
 #!/bin/bash
 cd "$(dirname "$0")"
 function doIt() {
-  rsync --exclude ".git/" --exclude ".DS_Store" --exclude "README" --exclude "bootstrap.sh" -av . ~
+  rsync --exclude ".git/" --exclude ".DS_Store" --exclude "README" --exclude "bootstrap.sh" --exclude ".gitmodules" -av . ~
 }
 if [ "$1" == "--force" -o "$1" == "-f" ]; then
   doIt
