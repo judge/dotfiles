@@ -6,7 +6,7 @@ set -o notify # Notify immediatly on bg job completion
 shopt -s nocaseglob # Case insensitive autocompletion
 shopt -s histappend # Append to bash history, rather than overwriting it
 shopt -s cdspell # Autocorrect typos
-export EDITOR=/usr/bin/vim
+export EDITOR=vim
 
 # export PAGER=vimpager # Setting pager to the vimpager in bin
 # alias less=$PAGER # Many scripts explicitly use less, workaround
@@ -22,5 +22,9 @@ export GREP_COLOR='1;33'
 export LSCOLORS='Gxfxcxdxdxegedabagacad'
 
 [[ -s $HOME/.rvm/scripts/rvm ]] && source $HOME/.rvm/scripts/rvm
+
+if [ -f $(brew --prefix)/etc/bash_completion ]; then
+    . $(brew --prefix)/etc/bash_completion
+fi
 
 source "`brew --prefix`/etc/grc.bashrc" # GRC

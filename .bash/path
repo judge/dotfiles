@@ -2,7 +2,7 @@
 
 # Homebrew, high priority
 if [ -d /usr/local/Cellar ]; then
-  export PATH=/usr/local/bin:$PATH
+  export PATH=/usr/local/bin:/usr/local/sbin:$PATH
 fi
 
 # Local bin, low priority

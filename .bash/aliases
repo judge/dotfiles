@@ -8,4 +8,4 @@ fi
 
 alias ..='cd ..'
 alias l='ls -lAFh'
-alias v='mvim --remote-tab'
+alias vim='/Applications/MacVim.app/Contents/MacOS/Vim'
