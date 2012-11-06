@@ -4,8 +4,8 @@ if [[ $platform == 'linux' ]]; then
    alias ls='ls --color=auto'
 elif [[ $platform == 'darwin' ]]; then
    alias ls='ls -G'
+   alias vim='/Applications/MacVim.app/Contents/MacOS/Vim'
 fi
 
 alias ..='cd ..'
 alias l='ls -lAFh'
-alias vim='/Applications/MacVim.app/Contents/MacOS/Vim'

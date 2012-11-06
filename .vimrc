@@ -7,14 +7,13 @@ call vundle#rc()
 Bundle 'gmarik/vundle'
 
 Bundle 'tomtom/tcomment_vim'
-" Bundle 'scrooloose/syntastic'
-Bundle 'kien/ctrlp.vim'
+Bundle 'matchit.zip'
 Bundle 'Lokaltog/vim-easymotion'
 Bundle 'Lokaltog/vim-powerline'
 Bundle 'altercation/vim-colors-solarized'
 Bundle 'docunext/closetag.vim'
 Bundle 'Shougo/neocomplcache'
-Bundle 'Shougo/neocomplcache-snippets-complete'
+Bundle 'Shougo/neosnippet'
 
 " ============ General settings ============
 filetype plugin indent on
@@ -28,15 +27,15 @@ set nocompatible
 syntax on
 set encoding=utf-8
 
-set nostartofline                    " Don’t reset cursor to start of line when moving around.
-set clipboard+=unnamed               " OSX clipboard
+" set nostartofline                    " Don’t reset cursor to start of line when moving around.
+" set clipboard+=unnamed               " OSX clipboard
 
-scriptencoding utf-8
-autocmd BufEnter * if bufname("") !~ "^\[A-Za-z0-9\]*://" | lcd %:p:h | endif
+" scriptencoding utf-8
+" autocmd BufEnter * if bufname("") !~ "^\[A-Za-z0-9\]*://" | lcd %:p:h | endif
 
-set shortmess+=filmnrxoOtT          " Abbrev. of messages (avoids 'hit enter')
-set viewoptions=folds,options,cursor,unix,slash " Better unix / windows compatibility
-set virtualedit=onemore             " Allow for cursor beyond last character
+" set shortmess+=filmnrxoOtT          " Abbrev. of messages (avoids 'hit enter')
+" set viewoptions=folds,options,cursor,unix,slash " Better unix / windows compatibility
+" set virtualedit=onemore             " Allow for cursor beyond last character
 set hidden                          " Allow buffer switching without saving
 
 set foldmethod=indent               " Fold based on indent
@@ -53,7 +52,7 @@ set undolevels=1000
 " ============ UI ============
 color solarized
 set background=dark
-let g:solarized_termtrans=1
+let g:solarized_termtrans=0
 
 set showmode
 set cursorline
@@ -68,18 +67,16 @@ let g:Powerline_symbols = 'fancy'
 let g:Powerline_stl_path_style = 'short'
 
 set backspace=indent,eol,start
-set linespace=0                 " No extra spaces between rows
+" set linespace=0                 " No extra spaces between rows
 set number                      " Line numbers on
 set showmatch                   " Show matching brackets/parenthesis
 set mat=2                       " How many tenths of a second to blink when matching brackets
 set incsearch                   " Find as you type search
 set hlsearch                    " Highlight search terms
-set winminheight=0              " Windows can be 0 line high
+" set winminheight=0              " Windows can be 0 line high
 set ignorecase                  " Case insensitive search
 set smartcase                   " Case sensitive when uc present
-set wildmenu                    " Show list instead of just completing
-set wildmode=list:longest,full  " Command <Tab> completion, list matches, then longest common part, then all.
-set whichwrap=b,s,h,l,<,>,[,]   " Backspace and cursor keys wrap to
+" set whichwrap=b,s,h,l,<,>,[,]   " Backspace and cursor keys wrap to
 set scrolljump=5                " Lines to scroll when cursor leaves screen
 set scrolloff=5                 " Minimum lines to keep above and below cursor
 set list listchars=tab:»·,trail:·
@@ -107,10 +104,13 @@ endif"
 " ============ Formatting ============
 set nowrap                      " Wrap long lines
 set autoindent                  " Indent at the same level of the previous line
-set shiftwidth=2                " Use indents of 4 spaces
+set shiftwidth=2                " Use indents of 2 spaces
 set expandtab                   " Tabs are spaces, not tabs
 set tabstop=2                   " An indentation every four columns
 set softtabstop=2               " Let backspace delete indent
+
+" Remove white space
+autocmd FileType c,cpp,java,php,javascript,python,twig,xml,yml autocmd BufWritePre <buffer> :call setline(1,map(getline(1,"$"),'substitute(v:val,"\\s\\+$","","")'))
 
 " Change cursor shape in different modes (iTerm2)
 if exists('$TMUX')
@@ -142,7 +142,7 @@ autocmd BufReadPost *
      \ endif
 " Remember info about open buffers on close
 set viminfo^=%
-
+"
 " ============ PHP ============
 let g:php_folding = 0
 let g:php_html_in_strings = 1
@@ -151,20 +151,6 @@ let g:php_parent_error_open = 1
 let g:php_no_shorttags = 1
 let g:PHP_default_indenting=1
 au BufRead,BufNewFile *.php set ft=php.html
-
-" ============ Session management ============
-nmap SS :wa<CR>:mksession! ~/.vim/sessions/
-nmap SO :wa<CR>:so ~/.vim/sessions/
-" Autosaving current session on exit
-function! SaveSession()
-  if v:this_session != ""
-    echo "Saving."
-    exe 'mksession! ' . '"' . v:this_session . '"'
-  else
-    echo "No Session."
-  endif
-endfunction
-au VimLeave * :call SaveSession()
 
 " ============ Mapping ============
 let mapleader = ','
@@ -179,10 +165,12 @@ nnoremap ,. '.
 " Clear search highlight
 nmap <silent> // :nohlsearch<CR>
 
+" Toggle cursorcolumn
 nmap <Leader>cc :set cursorcolumn! cursorcolumn?<cr>
 
 " Quickly toggle paste modes
 map <leader>p <Esc>:set paste!<CR>
+map <F12> <Esc>:set paste!<CR>
 
 " Change Working Directory to that of the current file
 cmap cwd lcd %:p:PHd
@@ -195,54 +183,61 @@ vnoremap > >gv
 " Split line at cursor position
 nmap K i<Enter><Esc>
 
-" Move between split windows by using the four directions H, L, I, N
-" (note that  I use I and N instead of J and K because  J already does
-" line joins and K is mapped to GitGrep the current word
-nnoremap <silent> <C-h> <C-w>h
-nnoremap <silent> <C-l> <C-w>l
-nnoremap <silent> <C-k> <C-w>k
-nnoremap <silent> <C-j> <C-w>j
+" Easier moving in tabs and windows
+map <C-J> <C-W>j<C-W>_
+map <C-K> <C-W>k<C-W>_
+map <C-L> <C-W>l<C-W>_
+map <C-H> <C-W>h<C-W>_
 
 " Create window splits easier. The default way is Ctrl-w,v and Ctrl-w,s. I remap this to vv and ss
 nnoremap <silent> vv <C-w>v
 nnoremap <silent> ss <C-w>s
 
+" Yank from the cursor to the end of the line, to be consistent with C and D.
+nnoremap Y y$
+
 " ============ Plugin settings ============
-" CtrlP
-let g:ctrlp_working_path_mode = 2
-nnoremap <silent> <D-t> :CtrlP<CR>
-nnoremap <silent> <leader>t :CtrlP<CR>
-nnoremap <silent> <D-r> :CtrlPBuffer<CR>
-nnoremap <silent> <leader>r :CtrlPBuffer<CR>
-let g:ctrlp_custom_ignore = {
-            \ 'dir':  '\.git$\|\.hg$\|\.svn$',
-            \ 'file': '\.exe$\|\.so$\|\.dll$|\.DS_Store' }
-
 " Neocomplcache
+let g:acp_enableAtStartup = 0
 let g:neocomplcache_enable_at_startup = 1
-let g:neocomplcache_enable_camel_case_completion = 1
 let g:neocomplcache_enable_smart_case = 1
+let g:neocomplcache_enable_camel_case_completion = 1
 let g:neocomplcache_enable_underbar_completion = 1
-let g:neocomplcache_min_syntax_length = 3
-let g:neocomplcache_enable_auto_delimiter = 1
-let g:neocomplcache_enable_auto_select = 1
-let g:neocomplcache_enable_fuzzy_completion = 1
 
-imap <expr><TAB> neocomplcache#sources#snippets_complete#expandable() ? "\<Plug>(neocomplcache_snippets_expand)" : pumvisible() ? "\<C-n>" : "\<TAB>"
+" SuperTab like snippets behavior.
+imap <expr><TAB> neosnippet#expandable() ? "\<Plug>(neosnippet_expand_or_jump)" : pumvisible() ? "\<C-n>" : "\<TAB>"
+smap <expr><TAB> neosnippet#expandable() ? "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
+
+inoremap <expr><CR>  neocomplcache#smart_close_popup() . "\<CR>"
+inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
+
+autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
+autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
+autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
+autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
+autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
+
+" Enable heavy omni completion.
+if !exists('g:neocomplcache_omni_patterns')
+  let g:neocomplcache_omni_patterns = {}
+endif
+let g:neocomplcache_omni_patterns.ruby = '[^. *\t]\.\w*\|\h\w*::'
+let g:neocomplcache_omni_patterns.php = '[^. \t]->\h\w*\|\h\w*::'
+let g:neocomplcache_omni_patterns.c = '\%(\.\|->\)\h\w*'
+let g:neocomplcache_omni_patterns.cpp = '\h\w*\%(\.\|->\)\h\w*\|\h\w*::'
+
+" For snippet_complete marker.
+if has('conceal')
+  set conceallevel=2 concealcursor=i
+endif
+
 
 " CloseTag
 autocmd FileType html,htmldjango,jinjahtml,eruby,mako let b:closetag_html_style=1
 autocmd FileType html,xhtml,xml,htmldjango,jinjahtml,eruby,mako source ~/.vim/bundle/closetag.vim/plugin/closetag.vim
 
-" Syntastic
-" let g:syntastic_enable_signs = 1
-" let g:syntastic_check_on_open = 0
-" let g:syntastic_disabled_filetypes = ['html', 'rst']
-" let g:syntastic_stl_format = '[%E{%e Errors}%B{, }%W{%w Warnings}]'
-" let g:syntastic_quiet_warnings = 1
-
 " TComment
 " Command-/ to toggle comments
-map <D-/> :TComment<CR>
-imap <D-/> <Esc>:TComment<CR>i
-map <leader>/ :TComment<CR>
+map <silent> <D-/> :TComment<CR>
+imap <silent> <D-/> <Esc>:TComment<CR>i
+map <silent> <leader>/ :TComment<CR>
