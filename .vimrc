@@ -12,8 +12,10 @@ Bundle 'Lokaltog/vim-easymotion'
 Bundle 'Lokaltog/vim-powerline'
 Bundle 'altercation/vim-colors-solarized'
 Bundle 'docunext/closetag.vim'
-Bundle 'Shougo/neocomplcache'
-Bundle 'Shougo/neosnippet'
+Bundle 'SirVer/ultisnips'
+Bundle 'ervandew/supertab'
+Bundle 'jiangmiao/auto-pairs'
+Bundle 'fholgado/minibufexpl.vim'
 
 " ============ General settings ============
 filetype plugin indent on
@@ -28,7 +30,7 @@ syntax on
 set encoding=utf-8
 
 " set nostartofline                    " Don’t reset cursor to start of line when moving around.
-" set clipboard+=unnamed               " OSX clipboard
+set clipboard+=unnamed               " OSX clipboard
 
 " scriptencoding utf-8
 " autocmd BufEnter * if bufname("") !~ "^\[A-Za-z0-9\]*://" | lcd %:p:h | endif
@@ -67,16 +69,16 @@ let g:Powerline_symbols = 'fancy'
 let g:Powerline_stl_path_style = 'short'
 
 set backspace=indent,eol,start
-" set linespace=0                 " No extra spaces between rows
+set linespace=0                 " No extra spaces between rows
 set number                      " Line numbers on
 set showmatch                   " Show matching brackets/parenthesis
 set mat=2                       " How many tenths of a second to blink when matching brackets
 set incsearch                   " Find as you type search
 set hlsearch                    " Highlight search terms
-" set winminheight=0              " Windows can be 0 line high
+set winminheight=0              " Windows can be 0 line high
 set ignorecase                  " Case insensitive search
 set smartcase                   " Case sensitive when uc present
-" set whichwrap=b,s,h,l,<,>,[,]   " Backspace and cursor keys wrap to
+set whichwrap=b,s,h,l,<,>,[,]   " Backspace and cursor keys wrap to
 set scrolljump=5                " Lines to scroll when cursor leaves screen
 set scrolloff=5                 " Minimum lines to keep above and below cursor
 set list listchars=tab:»·,trail:·
@@ -183,11 +185,11 @@ vnoremap > >gv
 " Split line at cursor position
 nmap K i<Enter><Esc>
 
-" Easier moving in tabs and windows
-map <C-J> <C-W>j<C-W>_
-map <C-K> <C-W>k<C-W>_
-map <C-L> <C-W>l<C-W>_
-map <C-H> <C-W>h<C-W>_
+" Use ctrl-[hjkl] to select the active split!
+nmap <silent> <c-k> :wincmd k<CR>
+nmap <silent> <c-j> :wincmd j<CR>
+nmap <silent> <c-h> :wincmd h<CR>
+nmap <silent> <c-l> :wincmd l<CR>
 
 " Create window splits easier. The default way is Ctrl-w,v and Ctrl-w,s. I remap this to vv and ss
 nnoremap <silent> vv <C-w>v
@@ -196,48 +198,35 @@ nnoremap <silent> ss <C-w>s
 " Yank from the cursor to the end of the line, to be consistent with C and D.
 nnoremap Y y$
 
+" ,1-9 - quick buffer switching
+nnoremap <silent> ,1 :b1<CR>
+nnoremap <silent> ,2 :b2<CR>
+nnoremap <silent> ,3 :b3<CR>
+nnoremap <silent> ,4 :b4<CR>
+nnoremap <silent> ,5 :b5<CR>
+nnoremap <silent> ,6 :b6<CR>
+nnoremap <silent> ,7 :b7<CR>
+nnoremap <silent> ,8 :b8<CR>
+nnoremap <silent> ,9 :b9<CR>
+
+map <F1> :bp<CR>
+map <F2> :bn<CR>
+
 " ============ Plugin settings ============
-" Neocomplcache
-let g:acp_enableAtStartup = 0
-let g:neocomplcache_enable_at_startup = 1
-let g:neocomplcache_enable_smart_case = 1
-let g:neocomplcache_enable_camel_case_completion = 1
-let g:neocomplcache_enable_underbar_completion = 1
-
-" SuperTab like snippets behavior.
-imap <expr><TAB> neosnippet#expandable() ? "\<Plug>(neosnippet_expand_or_jump)" : pumvisible() ? "\<C-n>" : "\<TAB>"
-smap <expr><TAB> neosnippet#expandable() ? "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
-
-inoremap <expr><CR>  neocomplcache#smart_close_popup() . "\<CR>"
-inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
-
-autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
-autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
-autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
-autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
-autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
-
-" Enable heavy omni completion.
-if !exists('g:neocomplcache_omni_patterns')
-  let g:neocomplcache_omni_patterns = {}
-endif
-let g:neocomplcache_omni_patterns.ruby = '[^. *\t]\.\w*\|\h\w*::'
-let g:neocomplcache_omni_patterns.php = '[^. \t]->\h\w*\|\h\w*::'
-let g:neocomplcache_omni_patterns.c = '\%(\.\|->\)\h\w*'
-let g:neocomplcache_omni_patterns.cpp = '\h\w*\%(\.\|->\)\h\w*\|\h\w*::'
-
-" For snippet_complete marker.
-if has('conceal')
-  set conceallevel=2 concealcursor=i
-endif
-
+" Ultisnips
+let g:UltiSnipsExpandTrigger="<tab>"
+let g:UltiSnipsJumpForwardTrigger="<tab>"
+let g:UltiSnipsJumpBackwardTrigger="<s-tab>"
 
 " CloseTag
 autocmd FileType html,htmldjango,jinjahtml,eruby,mako let b:closetag_html_style=1
 autocmd FileType html,xhtml,xml,htmldjango,jinjahtml,eruby,mako source ~/.vim/bundle/closetag.vim/plugin/closetag.vim
 
 " TComment
-" Command-/ to toggle comments
 map <silent> <D-/> :TComment<CR>
 imap <silent> <D-/> <Esc>:TComment<CR>i
 map <silent> <leader>/ :TComment<CR>
+let g:tcomment_types = {'php': {'commentstring_rx': '\%%(//\|#\) %s', 'commentstring': '# %s'}}
+
+au FileType javascript setlocal ts=4 sts=4 sw=4
+au FileType php setlocal ts=4 sts=4 sw=4
