@@ -9,12 +9,12 @@ Bundle 'gmarik/vundle'
 Bundle 'tomtom/tcomment_vim'
 Bundle 'matchit.zip'
 Bundle 'Lokaltog/vim-easymotion'
+Bundle 'tpope/vim-surround'
 Bundle 'Lokaltog/vim-powerline'
 Bundle 'altercation/vim-colors-solarized'
 Bundle 'docunext/closetag.vim'
 Bundle 'SirVer/ultisnips'
-Bundle 'ervandew/supertab'
-Bundle 'jiangmiao/auto-pairs'
+Bundle 'Raimondi/delimitMate'
 Bundle 'fholgado/minibufexpl.vim'
 
 " ============ General settings ============
@@ -22,22 +22,22 @@ filetype plugin indent on
 
 set mouse=a
 set ttymouse=xterm2
-set ttimeoutlen=20
+set ttimeoutlen=10
 set ttyfast
 
 set nocompatible
 syntax on
 set encoding=utf-8
 
-" set nostartofline                    " Don’t reset cursor to start of line when moving around.
+set nostartofline                    " Don’t reset cursor to start of line when moving around.
 set clipboard+=unnamed               " OSX clipboard
 
 " scriptencoding utf-8
 " autocmd BufEnter * if bufname("") !~ "^\[A-Za-z0-9\]*://" | lcd %:p:h | endif
 
-" set shortmess+=filmnrxoOtT          " Abbrev. of messages (avoids 'hit enter')
-" set viewoptions=folds,options,cursor,unix,slash " Better unix / windows compatibility
-" set virtualedit=onemore             " Allow for cursor beyond last character
+set shortmess+=filmnrxoOtT          " Abbrev. of messages (avoids 'hit enter')
+set viewoptions=folds,options,cursor,unix,slash " Better unix / windows compatibility
+set virtualedit=onemore             " Allow for cursor beyond last character
 set hidden                          " Allow buffer switching without saving
 
 set foldmethod=indent               " Fold based on indent
@@ -144,7 +144,7 @@ autocmd BufReadPost *
      \ endif
 " Remember info about open buffers on close
 set viminfo^=%
-"
+
 " ============ PHP ============
 let g:php_folding = 0
 let g:php_html_in_strings = 1
@@ -152,6 +152,8 @@ let g:php_parent_error_close = 1
 let g:php_parent_error_open = 1
 let g:php_no_shorttags = 1
 let g:PHP_default_indenting=1
+" Weird bug
+au BufRead,BufNewFile *.php set ft=html
 au BufRead,BufNewFile *.php set ft=php.html
 
 " ============ Mapping ============
@@ -192,8 +194,8 @@ nmap <silent> <c-h> :wincmd h<CR>
 nmap <silent> <c-l> :wincmd l<CR>
 
 " Create window splits easier. The default way is Ctrl-w,v and Ctrl-w,s. I remap this to vv and ss
-nnoremap <silent> vv <C-w>v
-nnoremap <silent> ss <C-w>s
+nnoremap <silent> vv <C-w>v<C-w>l
+nnoremap <silent> ss <C-w>s<C-w>j
 
 " Yank from the cursor to the end of the line, to be consistent with C and D.
 nnoremap Y y$
@@ -212,6 +214,23 @@ nnoremap <silent> ,9 :b9<CR>
 map <F1> :bp<CR>
 map <F2> :bn<CR>
 
+" Quote words under cursor
+nnoremap <leader>" viw<esc>a"<esc>hbi"<esc>lel
+nnoremap <leader>' viw<esc>a'<esc>hbi'<esc>lel
+
+" Quote current selection
+" TODO: This only works for selections that are created "forwardly"
+vnoremap <leader>" <esc>a"<esc>gvo<esc>i"<esc>gvo<esc>ll
+vnoremap <leader>' <esc>a'<esc>gvo<esc>i'<esc>gvo<esc>ll
+
+" Bubble single lines
+nmap <C-Up> ddkP
+nmap <C-Down> ddp
+
+"Bubble multiple lines
+vmap <C-Up> xkP`[V`]
+vmap <C-Down> xp`[V`]
+
 " ============ Plugin settings ============
 " Ultisnips
 let g:UltiSnipsExpandTrigger="<tab>"
@@ -228,5 +247,6 @@ imap <silent> <D-/> <Esc>:TComment<CR>i
 map <silent> <leader>/ :TComment<CR>
 let g:tcomment_types = {'php': {'commentstring_rx': '\%%(//\|#\) %s', 'commentstring': '# %s'}}
 
-au FileType javascript setlocal ts=4 sts=4 sw=4
-au FileType php setlocal ts=4 sts=4 sw=4
+" Yankring
+nnoremap <silent> <F10> :YRShow<CR>
+inoremap <silent> <F10> <Esc>:YRShow<CR>
