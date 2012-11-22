@@ -14,7 +14,7 @@ Bundle 'Lokaltog/vim-powerline'
 Bundle 'altercation/vim-colors-solarized'
 Bundle 'docunext/closetag.vim'
 Bundle 'SirVer/ultisnips'
-Bundle 'Raimondi/delimitMate'
+Bundle 'vim-scripts/Auto-Pairs'
 Bundle 'fholgado/minibufexpl.vim'
 
 " ============ General settings ============
