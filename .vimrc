@@ -13,9 +13,12 @@ Bundle 'tpope/vim-surround'
 Bundle 'Lokaltog/vim-powerline'
 Bundle 'altercation/vim-colors-solarized'
 Bundle 'docunext/closetag.vim'
-Bundle 'SirVer/ultisnips'
+Bundle 'Shougo/neocomplcache'
+Bundle 'Shougo/neosnippet'
+Bundle 'honza/snipmate-snippets'
 Bundle 'vim-scripts/Auto-Pairs'
 Bundle 'fholgado/minibufexpl.vim'
+Bundle 'tpope/vim-repeat'
 
 " ============ General settings ============
 filetype plugin indent on
@@ -31,9 +34,6 @@ set encoding=utf-8
 
 set nostartofline                    " Don’t reset cursor to start of line when moving around.
 set clipboard+=unnamed               " OSX clipboard
-
-" scriptencoding utf-8
-" autocmd BufEnter * if bufname("") !~ "^\[A-Za-z0-9\]*://" | lcd %:p:h | endif
 
 set shortmess+=filmnrxoOtT          " Abbrev. of messages (avoids 'hit enter')
 set viewoptions=folds,options,cursor,unix,slash " Better unix / windows compatibility
@@ -152,6 +152,7 @@ let g:php_parent_error_close = 1
 let g:php_parent_error_open = 1
 let g:php_no_shorttags = 1
 let g:PHP_default_indenting=1
+
 " Weird bug
 au BufRead,BufNewFile *.php set ft=html
 au BufRead,BufNewFile *.php set ft=php.html
@@ -200,42 +201,28 @@ nnoremap <silent> ss <C-w>s<C-w>j
 " Yank from the cursor to the end of the line, to be consistent with C and D.
 nnoremap Y y$
 
-" ,1-9 - quick buffer switching
-nnoremap <silent> ,1 :b1<CR>
-nnoremap <silent> ,2 :b2<CR>
-nnoremap <silent> ,3 :b3<CR>
-nnoremap <silent> ,4 :b4<CR>
-nnoremap <silent> ,5 :b5<CR>
-nnoremap <silent> ,6 :b6<CR>
-nnoremap <silent> ,7 :b7<CR>
-nnoremap <silent> ,8 :b8<CR>
-nnoremap <silent> ,9 :b9<CR>
+" Vim on the iPad
+if &term == "xterm-ipad"
+  nnoremap <Tab> <Esc>
+  vnoremap <Tab> <Esc>gV
+  onoremap <Tab> <Esc>
+  inoremap <Tab> <Esc>`^
+  inoremap <Leader><Tab> <Tab>
+endif
 
+" Buffer navigation
 map <F1> :bp<CR>
 map <F2> :bn<CR>
-
-" Quote words under cursor
-nnoremap <leader>" viw<esc>a"<esc>hbi"<esc>lel
-nnoremap <leader>' viw<esc>a'<esc>hbi'<esc>lel
-
-" Quote current selection
-" TODO: This only works for selections that are created "forwardly"
-vnoremap <leader>" <esc>a"<esc>gvo<esc>i"<esc>gvo<esc>ll
-vnoremap <leader>' <esc>a'<esc>gvo<esc>i'<esc>gvo<esc>ll
-
-" Bubble single lines
-nmap <C-Up> ddkP
-nmap <C-Down> ddp
-
-"Bubble multiple lines
-vmap <C-Up> xkP`[V`]
-vmap <C-Down> xp`[V`]
+imap <F1> <Esc>:bp<CR>
+imap <F2> <Esc>:bn<CR>
 
 " ============ Plugin settings ============
-" Ultisnips
-let g:UltiSnipsExpandTrigger="<tab>"
-let g:UltiSnipsJumpForwardTrigger="<tab>"
-let g:UltiSnipsJumpBackwardTrigger="<s-tab>"
+
+" miniBufExplr
+let g:miniBufExplMapWindowNavVim=1
+let g:miniBufExplMapWindowNavArrows=1
+let g:miniBufExplMapCTabSwitchBufs=1
+let g:miniBufExplModSelTarget=1
 
 " CloseTag
 autocmd FileType html,htmldjango,jinjahtml,eruby,mako let b:closetag_html_style=1
@@ -247,6 +234,28 @@ imap <silent> <D-/> <Esc>:TComment<CR>i
 map <silent> <leader>/ :TComment<CR>
 let g:tcomment_types = {'php': {'commentstring_rx': '\%%(//\|#\) %s', 'commentstring': '# %s'}}
 
-" Yankring
-nnoremap <silent> <F10> :YRShow<CR>
-inoremap <silent> <F10> <Esc>:YRShow<CR>
+" Neocomplcache
+let g:neocomplcache_enable_at_startup = 1
+let g:neocomplcache_enable_smart_case = 1
+let g:neocomplcache_enable_camel_case_completion = 1
+let g:neocomplcache_enable_underbar_completion = 1
+let g:neocomplcache_min_syntax_length = 3
+let g:neocomplcache_enable_auto_delimiter = 1
+let g:neosnippet#snippets_directory='~/.vim/bundle/snipmate-snippets/snippets'
+
+imap <expr><TAB> neosnippet#expandable() ? "\<Plug>(neosnippet_expand_or_jump)" : pumvisible() ? "\<CR>" : "\<TAB>"
+smap <expr><TAB> neosnippet#expandable() ? "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
+
+" AutoComplPop like behavior.
+let g:neocomplcache_enable_auto_select = 1
+
+if has('conceal')
+  set conceallevel=2 concealcursor=i
+endif
+
+autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
+autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
+autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
+autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
+autocmd FileType php setlocal omnifunc=phpcomplete#CompletePHP
+autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags

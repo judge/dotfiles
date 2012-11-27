@@ -9,6 +9,8 @@ elif [[ "$unamestr" == 'Darwin' ]]; then
    platform='darwin'
 fi
 
+tt () { echo -ne "\033]0;$@\\007"; }
+
 extract () {
   if [ -f $1 ]; then
     case $1 in

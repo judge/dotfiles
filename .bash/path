@@ -15,3 +15,7 @@ if [ -d ~/.gem/ruby/1.8/bin ]; then
   export PATH=$PATH:~/.gem/ruby/1.8/bin
 fi
 
+# MAMP
+if [ -d /Applications/MAMP/Library/bin ]; then
+  export PATH=$PATH:/Applications/MAMP/Library/bin
+fi
