@@ -19,6 +19,7 @@ Bundle 'honza/snipmate-snippets'
 Bundle 'vim-scripts/Auto-Pairs'
 Bundle 'fholgado/minibufexpl.vim'
 Bundle 'tpope/vim-repeat'
+Bundle 'prefixer.vim'
 
 " ============ General settings ============
 filetype plugin indent on
@@ -241,7 +242,8 @@ let g:neocomplcache_enable_camel_case_completion = 1
 let g:neocomplcache_enable_underbar_completion = 1
 let g:neocomplcache_min_syntax_length = 3
 let g:neocomplcache_enable_auto_delimiter = 1
-let g:neosnippet#snippets_directory='~/.vim/bundle/snipmate-snippets/snippets'
+" let g:neosnippet#snippets_directory='~/.vim/bundle/snipmate-snippets/snippets'
+let g:neosnippet#snippets_directory='~/.vim/snippets'
 
 imap <expr><TAB> neosnippet#expandable() ? "\<Plug>(neosnippet_expand_or_jump)" : pumvisible() ? "\<CR>" : "\<TAB>"
 smap <expr><TAB> neosnippet#expandable() ? "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"

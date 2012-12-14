@@ -4,12 +4,12 @@ if [[ $platform == 'linux' ]]; then
   alias ls='ls --color=auto'
 elif [[ $platform == 'darwin' ]]; then
   alias ls='ls -G'
+  alias vim='reattach-to-user-namespace /Applications/MacVim.app/Contents/MacOS/Vim'
+  alias jdg='ssh -i ~/.ssh/jdg jdg.dyndns.info -R 23053:127.0.0.1:23053 -t tmux a'
 fi
 
 alias ..='cd ..'
 alias l='ls -lAFh'
-alias vim='reattach-to-user-namespace /Applications/MacVim.app/Contents/MacOS/Vim'
-alias jdg='ssh -i ~/.ssh/jdg jdg.dyndns.info -R 23053:127.0.0.1:23053 -t tmux a'
 
 command_exists () {
   type "$1" &> /dev/null ;
@@ -29,8 +29,7 @@ workon() {
     if [ $? != 0 ]
     then
       tmux new-session -s $1 -n vim -d
-      tmux split-window -v -t $1
-      tmux select-layout -t $1 main-horizontal
+      tmux split-window -p 25 -v -t $1
       tmux new-window -n console -t $1
       tmux select-window -t $1:1
       tmux attach -t $1
