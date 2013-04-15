@@ -6,11 +6,11 @@ if [[ $platform == 'linux' ]]; then
 elif [[ $platform == 'darwin' ]]; then
   alias ls='ls -G'
   alias vim='reattach-to-user-namespace mvim -v'
-  # if command_exists autossh ; then
+  if command_exists autossh ; then
 		alias jdg='autossh -M 0 jdg -t tmux a'
-	# else
-		# alias jdg='ssh jdg -t tmux a'
-	# fi
+	else
+		alias jdg='ssh jdg -t tmux a'
+	fi
 fi
 
 alias ..='cd ..'

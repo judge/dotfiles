@@ -1,9 +1,9 @@
 " ----------------------------------------------------------------------------
 "  Vundle setup
 " ----------------------------------------------------------------------------
-filetype off 			" Required for Vundle
+filetype off
 
-set rtp+=~/.vim/bundle/vundle/	" Add vundle to the RuntimePath
+set rtp+=~/.vim/bundle/vundle/
 call vundle#rc()
 
 " ============ Bundles ============
@@ -104,7 +104,6 @@ if has('cmdline_info')
 endif
 
 set laststatus=2
-
 set backspace=indent,eol,start
 set linespace=0                 " No extra spaces between rows
 set number                      " Line numbers on
