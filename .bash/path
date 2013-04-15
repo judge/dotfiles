@@ -1,0 +1,26 @@
+#!/bin/bash
+
+# Homebrew, high priority
+if [ -d /usr/local/Cellar ]; then
+  export PATH=/usr/local/bin:/usr/local/sbin:$PATH
+fi
+
+# Local bin, low priority
+if [ -d ~/.bin ]; then
+  export PATH=$PATH:~/.bin
+fi
+
+# RVM
+if [ -d ~/.gem/ruby/1.8/bin ]; then
+  export PATH=$PATH:~/.gem/ruby/1.8/bin
+fi
+
+# MAMP
+if [ -d /Applications/MAMP/Library/bin ]; then
+  export PATH=$PATH:/Applications/MAMP/Library/bin
+fi
+
+# Virtualbox
+if [ -d /Applications/VirtualBox.app/Contents/MacOS/ ]; then
+	export PATH=$PATH:/Applications/VirtualBox.app/Contents/MacOS/
+fi

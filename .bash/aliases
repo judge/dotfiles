@@ -1,0 +1,46 @@
+#! /bin/bash
+
+if [[ $platform == 'linux' ]]; then
+  alias ls='ls --color=auto'
+	alias transmissionpermission='sudo chown -R debian-transmission:debian-transmission $1'
+elif [[ $platform == 'darwin' ]]; then
+  alias ls='ls -G'
+  alias vim='reattach-to-user-namespace mvim -v'
+  # if command_exists autossh ; then
+		alias jdg='autossh -M 0 jdg -t tmux a'
+	# else
+		# alias jdg='ssh jdg -t tmux a'
+	# fi
+fi
+
+alias ..='cd ..'
+alias l='ls -lAFh'
+# Preserves environment variables when running sudo
+alias sudo='sudo -E'
+
+command_exists () {
+  type "$1" &> /dev/null ;
+}
+
+workon() {
+  if command_exists tmux ; then
+    if [ $# -lt 1 ]
+    then
+      echo "Usage: workon <session name>"
+      echo "Current sessions:"
+      tmux list-sessions
+      return 1
+    fi
+
+    tmux has-session -t $1
+    if [ $? != 0 ]
+    then
+      tmux new-session -s $1 -n vim -d
+      tmux split-window -p 25 -v -t $1
+      tmux new-window -n console -t $1
+      tmux select-window -t $1:1
+      tmux attach -t $1
+    fi
+      tmux attach -t $1
+  fi
+}
