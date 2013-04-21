@@ -161,6 +161,15 @@ endif
 " set colorcolumn=80
 " highlight colorcolumn ctermbg=0
 
+" Session save/restore
+nnoremap SQ <ESC>:mksession! .vimsession<CR>:wqa<CR>
+function! RestoreSession()
+    if argc() == 0 && filereadable('.vimsession')
+        execute 'source .vimsession'
+    end
+endfunction
+autocmd VimEnter * call RestoreSession()
+
 " ============ Formatting ============
 set nowrap                      " Wrap long lines
 set autoindent                  " Indent at the same level of the previous line
@@ -382,3 +391,7 @@ autocmd! bufwritepost .vimrc source %
 
 " HTML indentitation fix
 autocmd FileType html setlocal indentkeys-=*<Return>
+
+" Highlight the right column in git commits
+autocmd FileType gitcommit set colorcolumn=+1
+
