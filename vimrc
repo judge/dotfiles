@@ -12,14 +12,14 @@ Bundle 'gmarik/vundle'
 Bundle 'tomtom/tcomment_vim'
 Bundle 'docunext/closetag.vim'
 Bundle 'vim-scripts/Auto-Pairs'
-Bundle 'Shougo/neocomplcache'
-Bundle 'Shougo/neosnippet'
+" Bundle 'Shougo/neocomplcache'
+" Bundle 'Shougo/neosnippet'
+Bundle 'SirVer/ultisnips'
+Bundle 'ervandew/supertab'
 Bundle 'fholgado/minibufexpl.vim'
 Bundle 'tpope/vim-repeat'
 Bundle 'tpope/vim-surround'
-Bundle 'kien/ctrlp.vim'
 
-Bundle 'Lokaltog/vim-easymotion'
 Bundle 'Lokaltog/vim-powerline'
 Bundle 'stephenmckinney/vim-solarized-powerline'
 Bundle 'altercation/vim-colors-solarized'
@@ -287,8 +287,6 @@ imap <F2> <Esc>:bn<CR>i
 nnoremap <F3> :<C-U>setlocal lcs=tab:»·,trail:· list! list? <CR>
 
 " ============ Plugin settings ============
-
-
 " miniBufExplr
 let g:miniBufExplSplitBelow = 0
 let g:miniBufExplForceSyntaxEnable = 0
@@ -305,11 +303,12 @@ let g:miniBufExplCheckDupeBufs = 0
 autocmd FileType html,htmldjango,jinjahtml,eruby,mako let b:closetag_html_style=1
 autocmd FileType html,xhtml,xml,htmldjango,jinjahtml,eruby,mako source ~/.vim/bundle/closetag.vim/plugin/closetag.vim
 
-" change the default EasyMotion shading to something more readable with Solarized
-hi link EasyMotionTarget ErrorMsg
-hi link EasyMotionShade  Comment
-let g:EasyMotion_mapping_w = '<Space>'
-let g:EasyMotion_mapping_b = '<leader><Space>'
+" Ultisnips
+let g:UltiSnipsExpandTrigger="<tab>"
+let g:UltiSnipsJumpForwardTrigger="<tab>"
+let g:UltiSnipsJumpBackwardTrigger="<s-tab>"
+let g:UltiSnipsSnippetDirectories=["UltiSnips", "snippets"]
+let g:UltiSnipsListSnippets="<s-tab>"
 
 " TComment
 map <silent> <D-/> :TComment<CR>
@@ -334,51 +333,8 @@ set noshowmode " Hide the default mode text (e.g. -- INSERT -- below the statusl
 autocmd FileType php let b:surround_112 = "<?php \r ?>"     " p
 autocmd FileType php let b:surround_63 = "<?php \r ?>"      " ?
 
-" CtrlP
-let g:ctrlp_jump_to_buffer = 0
-let g:ctrlp_working_path_mode = 0
-let g:ctrlp_match_window_reversed = 1
-let g:ctrlp_split_window = 0
-let g:ctrlp_max_height = 20
-let g:ctrlp_extensions = ['tag']
-let g:ctrlp_custom_ignore = '\v[\/]\.(git|hg|svn)$'
-
-let g:ctrlp_map = '<leader>,'
-nnoremap <leader>. :CtrlPMixed<cr>
-
-" Neocomplcache
-let g:neocomplcache_enable_at_startup = 1
-let g:neocomplcache_enable_smart_case = 1
-let g:neocomplcache_enable_camel_case_completion = 0
-let g:neocomplcache_enable_underbar_completion = 0
-let g:neocomplcache_min_syntax_length = 3
-let g:neocomplcache_enable_auto_delimiter = 1
-" let g:neosnippet#snippets_directory='~/.vim/bundle/snipmate-snippets/snippets'
-let g:neosnippet#snippets_directory='~/.vim/snippets'
-let g:neocomplcache_max_list = 5
-
-imap <expr><TAB> neosnippet#expandable_or_jumpable() ? "\<Plug>(neosnippet_expand_or_jump)" : pumvisible() ? "\<C-n>" : "\<TAB>"
-smap <expr><TAB> neosnippet#expandable_or_jumpable() ? "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
-
-" AutoComplPop like behavior.
-let g:neocomplcache_enable_auto_select = 1
-
-" Disable Scratch
-set completeopt-=preview
-
-" For snippet_complete marker.
-if has('conceal')
-	set conceallevel=2 concealcursor=i
-endif
-
 " PHP settings
 autocmd BufRead,BufNewFile *.php set ft=php.html
-nmap <silent> <F4>
- \ :!ctags -f ./tags
- \ --langmap="php:+.inc"
- \ -h ".php.inc" -R --totals=yes
- \ --tag-relative=yes --PHP-kinds=+cf-v .<CR>
-set tags=./tags,tags
 
 autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
 autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
@@ -394,4 +350,3 @@ autocmd FileType html setlocal indentkeys-=*<Return>
 
 " Highlight the right column in git commits
 autocmd FileType gitcommit set colorcolumn=+1
-

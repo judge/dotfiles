@@ -1,4 +1,7 @@
 #! /bin/bash
+command_exists () {
+  type "$1" &> /dev/null ;
+}
 
 if [[ $platform == 'linux' ]]; then
   alias ls='ls --color=auto'
@@ -17,10 +20,6 @@ alias ..='cd ..'
 alias l='ls -lAFh'
 # Preserves environment variables when running sudo
 alias sudo='sudo -E'
-
-command_exists () {
-  type "$1" &> /dev/null ;
-}
 
 workon() {
   if command_exists tmux ; then
