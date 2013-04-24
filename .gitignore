@@ -1,5 +1,5 @@
 ssh
-vim/bundle/
+vim/bundle/*
 .DS_Store
 Desktop.ini
 ._*
