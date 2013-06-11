@@ -52,3 +52,6 @@
 [user]
 	name = Tamás Bíró
 	email = tamas.biro@gmail.com
+
+[push]
+	default = matching

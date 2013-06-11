@@ -1,0 +1,23 @@
+snippet php
+<?php $1 ?>
+endsnippet
+
+snippet pre
+echo '<pre>'; print_r($1); '</pre>';
+endsnippet
+
+snippet switch
+switch (${1:$variable}) {
+	case '$2':
+		${3:// code... }
+		break;
+	default:
+		break;
+}
+endsnippet
+
+snippet foreach
+foreach( ${1:$array} as ${2:$value} ) {
+	${3:// code... }
+}
+endsnippet

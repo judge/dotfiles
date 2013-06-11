@@ -19,7 +19,7 @@ fi
 alias ..='cd ..'
 alias l='ls -lAFh'
 # Preserves environment variables when running sudo
-alias sudo='sudo -E'
+alias sudo='sudo '
 
 workon() {
   if command_exists tmux ; then

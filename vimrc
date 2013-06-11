@@ -10,15 +10,15 @@ call vundle#rc()
 Bundle 'gmarik/vundle'
 
 Bundle 'tomtom/tcomment_vim'
-Bundle 'docunext/closetag.vim'
 Bundle 'vim-scripts/Auto-Pairs'
-" Bundle 'Shougo/neocomplcache'
-" Bundle 'Shougo/neosnippet'
 Bundle 'SirVer/ultisnips'
-Bundle 'ervandew/supertab'
-Bundle 'fholgado/minibufexpl.vim'
+Bundle 'Valloric/YouCompleteMe'
+Bundle 'techlivezheng/vim-plugin-minibufexpl'
 Bundle 'tpope/vim-repeat'
 Bundle 'tpope/vim-surround'
+Bundle 'tpope/vim-unimpaired'
+Bundle 'terryma/vim-multiple-cursors'
+Bundle 'Shougo/unite.vim'
 
 Bundle 'Lokaltog/vim-powerline'
 Bundle 'stephenmckinney/vim-solarized-powerline'
@@ -118,7 +118,7 @@ set smartcase                   " Case sensitive when uc present
 set whichwrap=b,s,h,l,<,>,[,]   " Backspace and cursor keys wrap to
 set scrolljump=5                " Lines to scroll when cursor leaves screen
 set scrolloff=5                 " Minimum lines to keep above and below cursor
-set showbreak=↪									" String to put before wrapped screen lines
+set showbreak=↪                 " String to put before wrapped screen lines
 set gcr=a:blinkon0              " Disable cursor blink
 set autoread                    " Reload files changed outside vim
 set noerrorbells                " No annoying sound on errors
@@ -156,10 +156,10 @@ else
 	augroup END
 endif
 
-" Place a dark gray line at 80 columns to visibly mark the point where most
+" Place a dark gray line at 120 columns to visibly mark the point where most
 " code should end or be wrapped
-" set colorcolumn=80
-" highlight colorcolumn ctermbg=0
+set colorcolumn=120
+highlight colorcolumn ctermbg=0
 
 " Session save/restore
 nnoremap SQ <ESC>:mksession! .vimsession<CR>:wqa<CR>
@@ -176,11 +176,11 @@ set autoindent                  " Indent at the same level of the previous line
 set shiftwidth=2                " Use indents of 2 spaces
 set shiftround
 set noexpandtab                 " Real tabs, no spaces (WordPress)
-set tabstop=2                   " An indentation every four columns
+set tabstop=2                   " An indentation every two columns
 set softtabstop=2               " Let backspace delete indent
 
 " Remove white space
-" autocmd FileType c,cpp,java,php,javascript,python,twig,xml,yml autocmd BufWritePre <buffer> :call setline(1,map(getline(1,"$"),'substitute(v:val,"\\s\\+$","","")'))
+autocmd FileType c,cpp,java,php,javascript,python,twig,xml,yml autocmd BufWritePre <buffer> :call setline(1,map(getline(1,"$"),'substitute(v:val,"\\s\\+$","","")'))
 
 " Change cursor shape in different modes (iTerm2)
 if exists('$TMUX')
@@ -220,8 +220,8 @@ let g:netrw_preview = 1 " preview window shown in a vertically split
 " ============ Mapping ============
 let mapleader = ','
 
-nnoremap j gj
-nnoremap k gk
+" nnoremap j gj
+" nnoremap k gk
 
 nnoremap ' `
 nnoremap ` '
@@ -266,6 +266,11 @@ nnoremap <silent> ss <C-w>s<C-w>j
 " Yank from the cursor to the end of the line, to be consistent with C and D.
 nnoremap Y y$
 
+" this makes vim's regex engine "not stupid"
+" see :h magic
+nnoremap / /\v
+vnoremap / /\v
+
 " Vim on the iPad
 if &term == "xterm-ipad"
 	nnoremap <Tab> <Esc>
@@ -298,17 +303,18 @@ let g:miniBufExplModSelTarget = 1
 let g:miniBufExplTabWrap = 1
 let g:miniBufExplUseSingleClick = 1
 let g:miniBufExplCheckDupeBufs = 0
-
-" CloseTag
-autocmd FileType html,htmldjango,jinjahtml,eruby,mako let b:closetag_html_style=1
-autocmd FileType html,xhtml,xml,htmldjango,jinjahtml,eruby,mako source ~/.vim/bundle/closetag.vim/plugin/closetag.vim
+let g:miniBufExplShowBufNumbers = 0
+let g:statusLineText = ""
 
 " Ultisnips
 let g:UltiSnipsExpandTrigger="<tab>"
 let g:UltiSnipsJumpForwardTrigger="<tab>"
 let g:UltiSnipsJumpBackwardTrigger="<s-tab>"
 let g:UltiSnipsSnippetDirectories=["UltiSnips", "snippets"]
-let g:UltiSnipsListSnippets="<s-tab>"
+
+" YouCompleteMe
+let g:ycm_key_list_select_completion = ['<Down>']
+let g:ycm_key_list_previous_completion = ['<Up>']
 
 " TComment
 map <silent> <D-/> :TComment<CR>
@@ -350,3 +356,21 @@ autocmd FileType html setlocal indentkeys-=*<Return>
 
 " Highlight the right column in git commits
 autocmd FileType gitcommit set colorcolumn=+1
+
+" Unite
+let g:unite_enable_start_insert=1
+let g:unite_source_history_yank_enable=1
+let g:unite_source_file_rec_max_cache_files=5000
+let g:unite_prompt='» '
+
+let g:unite_source_grep_command='ack'
+let g:unite_source_grep_default_opts='--no-heading --no-color -a'
+let g:unite_source_grep_recursive_opt=''
+
+nmap <space> [unite]
+nnoremap [unite] <nop>
+
+nnoremap <silent> [unite]<space> :<C-u>Unite -resume -auto-resize -buffer-name=mixed file_rec buffer file_mru bookmark<cr>
+nnoremap <silent> [unite]f :<C-u>Unite -resume -auto-resize -buffer-name=files file_rec<cr>
+nnoremap <silent> [unite]y :<C-u>Unite -buffer-name=yanks history/yank<cr>
+

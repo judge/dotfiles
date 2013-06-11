@@ -5,6 +5,5 @@ source ~/.bash/shell
 source ~/.bash/path
 source ~/.bash/theme
 source ~/.bash/aliases
-source ~/.bash/git
 
 [[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*
