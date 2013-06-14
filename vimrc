@@ -10,7 +10,6 @@ call vundle#rc()
 Bundle 'gmarik/vundle'
 
 Bundle 'tomtom/tcomment_vim'
-Bundle 'vim-scripts/Auto-Pairs'
 Bundle 'SirVer/ultisnips'
 Bundle 'Valloric/YouCompleteMe'
 Bundle 'techlivezheng/vim-plugin-minibufexpl'
@@ -18,11 +17,13 @@ Bundle 'tpope/vim-repeat'
 Bundle 'tpope/vim-surround'
 Bundle 'tpope/vim-unimpaired'
 Bundle 'terryma/vim-multiple-cursors'
-Bundle 'Shougo/unite.vim'
+Bundle 'vim-scripts/HTML-AutoCloseTag'
+Bundle 'vim-scripts/Auto-Pairs'
 
 Bundle 'Lokaltog/vim-powerline'
-Bundle 'stephenmckinney/vim-solarized-powerline'
-Bundle 'altercation/vim-colors-solarized'
+" Bundle 'stephenmckinney/vim-solarized-powerline'
+" Bundle 'altercation/vim-colors-solarized'
+Bundle 'chriskempson/base16-vim'
 
 " Syntax
 Bundle 'scrooloose/syntastic'
@@ -80,9 +81,11 @@ set undolevels=1000
 
 " ============ UI ============
 syntax enable
-let g:solarized_visibility = 'low'
+" let g:solarized_visibility = 'low'
 set background=dark
-colorscheme solarized
+" colorscheme solarized
+let base16colorspace=256
+colorscheme base16-default
 if &term =~ '256color'
   " Disable Background Color Erase (BCE) so that color schemes
   " work properly when Vim is used inside tmux and GNU screen.
@@ -160,15 +163,6 @@ endif
 " code should end or be wrapped
 set colorcolumn=120
 highlight colorcolumn ctermbg=0
-
-" Session save/restore
-nnoremap SQ <ESC>:mksession! .vimsession<CR>:wqa<CR>
-function! RestoreSession()
-    if argc() == 0 && filereadable('.vimsession')
-        execute 'source .vimsession'
-    end
-endfunction
-autocmd VimEnter * call RestoreSession()
 
 " ============ Formatting ============
 set nowrap                      " Wrap long lines
@@ -356,21 +350,3 @@ autocmd FileType html setlocal indentkeys-=*<Return>
 
 " Highlight the right column in git commits
 autocmd FileType gitcommit set colorcolumn=+1
-
-" Unite
-let g:unite_enable_start_insert=1
-let g:unite_source_history_yank_enable=1
-let g:unite_source_file_rec_max_cache_files=5000
-let g:unite_prompt='» '
-
-let g:unite_source_grep_command='ack'
-let g:unite_source_grep_default_opts='--no-heading --no-color -a'
-let g:unite_source_grep_recursive_opt=''
-
-nmap <space> [unite]
-nnoremap [unite] <nop>
-
-nnoremap <silent> [unite]<space> :<C-u>Unite -resume -auto-resize -buffer-name=mixed file_rec buffer file_mru bookmark<cr>
-nnoremap <silent> [unite]f :<C-u>Unite -resume -auto-resize -buffer-name=files file_rec<cr>
-nnoremap <silent> [unite]y :<C-u>Unite -buffer-name=yanks history/yank<cr>
-

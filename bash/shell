@@ -18,9 +18,7 @@ export LANG="en_US"
 
 export GREP_OPTIONS='--color=auto'
 export GREP_COLOR='1;33'
-
-export LSCOLORS='Gxfxcxdxdxegedabagacad'
-
+ 
 [[ -s $HOME/.rvm/scripts/rvm ]] && source $HOME/.rvm/scripts/rvm
 
 if [[ $platform == 'darwin' ]]; then
